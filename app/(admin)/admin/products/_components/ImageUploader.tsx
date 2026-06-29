@@ -1,61 +1,81 @@
-// app/(admin)/admin/products/_components/ImageUploader.tsx
-"use client";
-import { useCallback, useState } from "react";
-import { useDropzone } from "react-dropzone";
-import { X, ImagePlus, Loader2 } from "lucide-react";
-import toast from "react-hot-toast";
+"use client"
+import { useCallback, useState } from "react"
+import { useDropzone } from "react-dropzone"
+import { X, ImagePlus, Loader2 } from "lucide-react"
+import toast from "react-hot-toast"
+import { promises } from "dns"
 
-interface Image { url: string; publicId: string; }
+interface Image {
+  url: string;
+  publicId: string
+}
 
 interface Props {
   images: Image[];
-  onChange: (images: Image[]) => void;
+  onChange: (images: Image[]) => void
 }
 
 export default function ImageUploader({ images, onChange }: Props) {
-  const [uploading, setUploading] = useState(false);
+
+  const [uploading, setUploading] = useState(false)
 
   const uploadToCloudinary = async (file: File): Promise<Image> => {
     const formData = new FormData();
-    formData.append("file", file);
-    formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!);
-    formData.append("folder", "feelgood/products");
+    formData.append("file", file)
+    formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!)
+    formData.append("folder", "feelgood/products")
 
     const res = await fetch(
       `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
-      { method: "POST", body: formData }
-    );
-    const data = await res.json();
-    return { url: data.secure_url, publicId: data.public_id };
-  };
+      {
+        method: "POST",
+        body: formData
+
+      }
+    )
+
+    const data = await res.json()
+    return {
+      url: data.secure_url,
+      publicId: data.public_id
+    }
+
+  }
+
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     if (images.length + acceptedFiles.length > 6) {
-      toast.error("Maximum 6 images allowed");
+      toast.error("only max 6 images allowed ")
       return;
     }
     try {
-      setUploading(true);
+      setUploading(true)
       const uploaded = await Promise.all(acceptedFiles.map(uploadToCloudinary));
-      onChange([...images, ...uploaded]);
-    } catch {
+      onChange([...images, ...uploaded])
+
+    } catch (error) {
       toast.error("Image upload failed");
+
     } finally {
-      setUploading(false);
+      setUploading(false)
     }
-  }, [images, onChange]);
+
+  }, [images, onChange])
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: { "image/*": [] },
     multiple: true,
-    disabled: uploading,
-  });
+    disabled: uploading
+  })
 
-  const removeImage = (publicId: string) => {
-    onChange(images.filter((img) => img.publicId !== publicId));
-  };
+  const removeImage =  (publicId: string) => {
 
+    onChange(images.filter((img) => img.publicId !== publicId))
+
+  }
+
+  
   return (
     <div className="space-y-3">
       <div
