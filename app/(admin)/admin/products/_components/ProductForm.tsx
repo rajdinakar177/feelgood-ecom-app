@@ -10,7 +10,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import ImageUploader from "./ImageUploader";
+import ImageUploader from "@/app/components/shared/ImageUploader";
+
 import VariantManager from "./VariantManager";
 import SeoFields from "./SeoFields";
 
@@ -120,8 +121,12 @@ export default function ProductForm({ editData }: Props) {
           {/* Images */}
           <div className="space-y-1.5">
             <Label>Product Images</Label>
-            <ImageUploader images={form.images} onChange={(imgs) => set("images", imgs)} />
-          </div>
+<ImageUploader
+  images={form.images}
+  onChange={(imgs) => set("images", imgs)}
+  folder="feelgood/products"
+  maxImages={6}
+/>          </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="col-span-2 space-y-1.5">
