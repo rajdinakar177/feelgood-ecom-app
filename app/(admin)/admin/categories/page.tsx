@@ -1,6 +1,6 @@
 // app/(admin)/admin/categories/page.tsx
 import CategoryTable from "./_components/CategoryTable";
-import CategoryTree from "./_components/CategoryTree";
+import CategoryTree from "./_components/CategoryForm";
 
 export default function CategoriesPage() {
   return (
