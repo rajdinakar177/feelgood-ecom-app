@@ -35,15 +35,25 @@ function StatCard({
   accent?: string;
 }) {
   return (
-    <div className="flex flex-col gap-3 p-5 rounded-2xl bg-white/[0.03] border border-white/[0.07]">
-      <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${accent ?? "bg-blue-500/15 text-blue-400"}`}>
-        {icon}
-      </div>
-      <div>
-        <p className="text-2xl font-bold text-white">{value}</p>
-        <p className="text-xs text-slate-500 mt-0.5">{label}</p>
-      </div>
-    </div>
+   <div className="group flex items-center gap-4 rounded-2xl border border-zinc-200 bg-white p-5 transition-all duration-300 hover:-translate-y-1 hover:border-black hover:shadow-lg">
+  <div
+    className={`flex h-12 w-12 items-center justify-center rounded-xl transition-colors duration-300 ${
+      accent ?? "bg-black text-white"
+    }`}
+  >
+    {icon}
+  </div>
+
+  <div>
+    <h3 className="text-2xl font-bold text-zinc-900">
+      {value}
+    </h3>
+
+    <p className="mt-1 text-sm text-zinc-500">
+      {label}
+    </p>
+  </div>
+</div>
   );
 }
 
@@ -84,14 +94,14 @@ export default function ProfilePage() {
 
 if (loading) {
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center">
-      <div className="w-12 h-12 border-2 border-orange-500/20 border-t-orange-500 rounded-full animate-spin" />
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="w-12 h-12 border-2 rounded-full animate-spin" />
     </div>
   );
 }
 
 return (
-  <div className="min-h-screen bg-black text-white">
+  <div className="min-h-screen text-black">
     <Toaster />
 
     {/* Background Effects */}
@@ -105,7 +115,7 @@ return (
       {/* Page Header */}
 
       <div className="mb-10">
-        <p className="text-orange-400 uppercase tracking-[4px] text-xs font-semibold">
+        <p className=" uppercase tracking-[4px] text-xs font-semibold">
           My Account
         </p>
 
@@ -128,7 +138,7 @@ return (
 
           <div className="flex items-center gap-6">
 
-            <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center text-4xl font-black shadow-xl shadow-orange-500/30">
+            <div className="w-24 h-24 rounded-3xl bg-white text-black flex items-center justify-center text-4xl font-black shadow-xl shadow-orange-500/30">
               {user?.firstName?.charAt(0).toUpperCase()}
             </div>
 
@@ -151,13 +161,14 @@ return (
               self-start
               px-6
               py-3
-              bg-orange-500
+              bg-white
               hover:bg-orange-600
               rounded-xl
               font-semibold
               transition
               flex
               items-center
+              text-black
               gap-2
             "
           >
@@ -176,21 +187,21 @@ return (
           icon={<IconInbox size={18} />}
           label="Orders"
           value="12"
-          accent="bg-orange-500/15 text-orange-400"
+          accent="bg-orange-500/15 "
         />
 
         <StatCard
           icon={<IconVideo size={18} />}
           label="Wishlist"
           value="08"
-          accent="bg-orange-500/15 text-orange-400"
+          accent="bg-orange-500/15 "
         />
 
         <StatCard
           icon={<IconChartBar size={18} />}
           label="Reward Points"
           value="240"
-          accent="bg-orange-500/15 text-orange-400"
+          accent="bg-orange-500/15 "
         />
 
       </div>
@@ -206,7 +217,7 @@ return (
         <div className="grid md:grid-cols-4 gap-5">
 
           <button className="p-6 rounded-2xl bg-white/[0.03] border border-white/10 hover:border-orange-500/30 transition text-left">
-            <IconInbox className="text-orange-400 mb-4" />
+            <IconInbox className=" mb-4" />
             <h4 className="font-semibold">My Orders</h4>
             <p className="text-sm text-zinc-500 mt-1">
               Track recent purchases
@@ -214,7 +225,7 @@ return (
           </button>
 
           <button className="p-6 rounded-2xl bg-white/[0.03] border border-white/10 hover:border-orange-500/30 transition text-left">
-            <IconVideo className="text-orange-400 mb-4" />
+            <IconVideo className=" mb-4" />
             <h4 className="font-semibold">Wishlist</h4>
             <p className="text-sm text-zinc-500 mt-1">
               Saved products
@@ -222,7 +233,7 @@ return (
           </button>
 
           <button className="p-6 rounded-2xl bg-white/[0.03] border border-white/10 hover:border-orange-500/30 transition text-left">
-            <IconUpload className="text-orange-400 mb-4" />
+            <IconUpload className=" mb-4" />
             <h4 className="font-semibold">Addresses</h4>
             <p className="text-sm text-zinc-500 mt-1">
               Manage shipping info
@@ -230,7 +241,7 @@ return (
           </button>
 
           <button className="p-6 rounded-2xl bg-white/[0.03] border border-white/10 hover:border-orange-500/30 transition text-left">
-            <IconDeviceFloppy className="text-orange-400 mb-4" />
+            <IconDeviceFloppy className=" mb-4" />
             <h4 className="font-semibold">Settings</h4>
             <p className="text-sm text-zinc-500 mt-1">
               Account preferences
