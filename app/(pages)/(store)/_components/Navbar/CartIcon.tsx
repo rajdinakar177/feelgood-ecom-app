@@ -2,7 +2,7 @@
 "use client";
 import Link from "next/link";
 import { ShoppingBag } from "lucide-react";
-import { useCart } from "@/lib/hooks/useCart";
+import { useCart } from "@/app/lib/hooks/useCart";
 
 export default function CartIcon() {
   const totalItems = useCart((s) => s.totalItems());
