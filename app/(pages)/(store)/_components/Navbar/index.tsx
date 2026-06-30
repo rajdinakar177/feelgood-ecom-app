@@ -6,6 +6,7 @@ import { Menu, X, Search } from "lucide-react";
 import CartIcon from "./CartIcon";
 import UserMenu from "./UserMenu";
 import NavLinks from "./NavLinks";
+import SearchBar from "./SearchBar";
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -27,14 +28,9 @@ export default function Navbar() {
 
           {/* Search bar */}
           <div className="hidden md:flex flex-1 max-w-sm">
-            <Link
-              href="/search"
-              className="flex items-center gap-2 w-full rounded-full border px-4 py-2
-                text-sm text-muted-foreground hover:border-primary transition-colors"
-            >
-              <Search className="w-4 h-4" />
-              Search products...
-            </Link>
+          <div className="hidden md:flex flex-1 max-w-sm">
+  <SearchBar />
+</div>
           </div>
 
           {/* Right actions */}
