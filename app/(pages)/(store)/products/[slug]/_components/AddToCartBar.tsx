@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useCart } from "@/app/lib/hooks/useCart";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import WishlistButton from "@/app/components/shared/WishlistButton";
 
 interface Props {
   product:   any;
@@ -80,9 +81,8 @@ export default function AddToCartBar({ product, variant, maxStock }: Props) {
         >
           Buy Now
         </Button>
-        <Button variant="outline" size="icon">
-          <Heart className="w-4 h-4" />
-        </Button>
+     <WishlistButton productId={product._id} size="md" />
+
       </div>
     </div>
   );

@@ -1,19 +1,9 @@
-// app/(store)/_components/FeaturedProducts/ProductCard.tsx
+// app/(pages)/(store)/products/_components/ProductCard.tsx
 import Link from "next/link";
 import { Star } from "lucide-react";
+import WishlistButton from "@/app/components/shared/WishlistButton";
 
-interface Props {
-  product: {
-    _id:         string;
-    name:        string;
-    slug:        string;
-    images:      { url: string }[];
-    basePrice:   number;
-    salePrice?:  number;
-    avgRating:   number;
-    reviewCount: number;
-  };
-}
+interface Props { product: any; }
 
 export default function ProductCard({ product }: Props) {
   const discount = product.salePrice
@@ -29,11 +19,15 @@ export default function ProductCard({ product }: Props) {
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
         {discount && (
-          <span className="absolute top-2 left-2 bg-destructive text-destructive-foreground
-            text-xs font-bold px-2 py-1 rounded-full">
+          <span className="absolute top-2 left-2 bg-destructive text-destructive-foreground text-xs font-bold px-2 py-1 rounded-full">
             -{discount}%
           </span>
         )}
+
+        {/* Wishlist heart — top right, always visible on mobile, fades in on hover for desktop */}
+        <div className="absolute top-2 right-2 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
+          <WishlistButton productId={product._id} size="sm" />
+        </div>
       </div>
 
       <div className="space-y-1">
@@ -51,13 +45,9 @@ export default function ProductCard({ product }: Props) {
         )}
 
         <div className="flex items-center gap-2">
-          <span className="font-semibold text-sm">
-            ₹{product.salePrice ?? product.basePrice}
-          </span>
+          <span className="font-semibold text-sm">₹{product.salePrice ?? product.basePrice}</span>
           {product.salePrice && (
-            <span className="text-xs text-muted-foreground line-through">
-              ₹{product.basePrice}
-            </span>
+            <span className="text-xs text-muted-foreground line-through">₹{product.basePrice}</span>
           )}
         </div>
       </div>

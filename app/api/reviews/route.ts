@@ -4,6 +4,7 @@ import Review from "@/app/models/reviewModel";
 import Order from "@/app/models/orderModel";
 import { NextRequest, NextResponse } from "next/server";
 import { userAuth } from "@/app/lib/middleware/userAuth";
+import mongoose from "mongoose";
 
 // GET — list reviews for a product (public)
 export async function GET(request: NextRequest) {
@@ -19,6 +20,10 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "productId is required" }, { status: 400 });
     }
 
+    if (!mongoose.Types.ObjectId.isValid(productId)) {
+      return NextResponse.json({ error: "Invalid productId" }, { status: 400 });
+    }
+
     const query: any = { productId, isApproved: true };
     if (ratingFilter) query.rating = Number(ratingFilter);
 
@@ -32,9 +37,8 @@ export async function GET(request: NextRequest) {
 
       Review.countDocuments(query),
 
-      // Rating breakdown: how many 5★, 4★, 3★ etc.
       Review.aggregate([
-        { $match: { productId: new (require("mongoose").Types.ObjectId)(productId), isApproved: true } },
+        { $match: { productId: new mongoose.Types.ObjectId(productId), isApproved: true } },
         { $group: { _id: "$rating", count: { $sum: 1 } } },
       ]),
     ]);
@@ -43,56 +47,10 @@ export async function GET(request: NextRequest) {
       success: true,
       data: reviews,
       pagination: { page, limit, total, pages: Math.ceil(total / limit) },
-      breakdown, // [{ _id: 5, count: 12 }, { _id: 4, count: 3 }, ...]
+      breakdown,
     });
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
-  }
-}
-
-// POST — submit a review (logged-in users only)
-export async function POST(request: NextRequest) {
-  const auth = userAuth(request);
-  if (auth instanceof NextResponse) return auth;
-
-  try {
-    await connect();
-    const body = await request.json();
-    const { productId, rating, title, body: reviewBody, images } = body;
-
-    if (!productId || !rating) {
-      return NextResponse.json({ error: "Product and rating are required" }, { status: 400 });
-    }
-
-    // Check if already reviewed (compound unique index also enforces this at DB level)
-    const existing = await Review.findOne({ productId, userId: auth.userId });
-    if (existing) {
-      return NextResponse.json({ error: "You've already reviewed this product" }, { status: 400 });
-    }
-
-    // Check verified purchase — did this user order this product, and was it delivered?
-    const order = await Order.findOne({
-      userId: auth.userId,
-      "items.productId": productId,
-      status: { $in: ["delivered", "shipped"] },
-    });
-
-    const review = await Review.create({
-      productId,
-      userId: auth.userId,
-      orderId: order?._id,
-      rating,
-      title,
-      body: reviewBody,
-      images: images ?? [],
-      isVerifiedPurchase: !!order,
-    });
-
-    return NextResponse.json({ success: true, data: review }, { status: 201 });
-  } catch (error: any) {
-    if (error.code === 11000) {
-      return NextResponse.json({ error: "You've already reviewed this product" }, { status: 400 });
-    }
+    console.error("Reviews GET error:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
